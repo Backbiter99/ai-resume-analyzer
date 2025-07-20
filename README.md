@@ -6,13 +6,13 @@ A modern, production-ready template for building full-stack React applications u
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+-   🚀 Server-side rendering
+-   ⚡️ Hot Module Replacement (HMR)
+-   📦 Asset bundling and optimization
+-   🔄 Data loading and mutations
+-   🔒 TypeScript by default
+-   🎉 TailwindCSS for styling
+-   📖 [React Router docs](https://reactrouter.com/)
 
 ## Getting Started
 
@@ -57,12 +57,12 @@ docker run -p 3000:3000 my-app
 
 The containerized application can be deployed to any platform that supports Docker, including:
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+-   AWS ECS
+-   Google Cloud Run
+-   Azure Container Apps
+-   Digital Ocean App Platform
+-   Fly.io
+-   Railway
 
 ### DIY Deployment
 
@@ -85,3 +85,14 @@ This template comes with [Tailwind CSS](https://tailwindcss.com/) already config
 ---
 
 Built with ❤️ using React Router.
+
+Tech Stack:
+Typescript
+React
+Vite
+React Router
+React Compiler
+React Scan
+Tailwind CSS
+Puter.js
+Zustand
