@@ -50,6 +50,16 @@ form {
     @apply flex flex-col items-start gap-8 w-full;
 }
 
+@layer utilities {
+    .flex-row-center {
+        @apply flex flex-row items-center justify-center;
+    }
+
+    .flex-col-center {
+        @apply flex flex-col items-center justify-center;
+    }
+}
+
 @layer components {
     .text-gradient {
         @apply bg-clip-text text-transparent bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
