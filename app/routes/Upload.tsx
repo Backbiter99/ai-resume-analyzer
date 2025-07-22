@@ -1,5 +1,6 @@
 import { prepareInstructions } from "constants/index";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
 import { convertPdfToImage } from "~/lib/pdf2img";
@@ -8,6 +9,7 @@ import { generateUUID } from "~/lib/utils";
 
 const Upload = () => {
     const { fs, kv, ai } = usePuterStore();
+    const navigate = useNavigate();
 
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusText, setStatusText] = useState("");
@@ -90,6 +92,7 @@ const Upload = () => {
 
         setStatusText("Analysis complete");
         console.log(data);
+        navigate(`/resume/${uuid}`);
     };
 
     const handleSubmit = (formData: FormData) => {
