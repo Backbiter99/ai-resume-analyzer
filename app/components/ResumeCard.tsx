@@ -1,40 +1,71 @@
 import { Link } from "react-router";
-import ScoreCircle from "./ScoreCircle";
+import ResumeCardHelper from "./ResumeCardHelper";
+import { useEffect, useRef, useState } from "react";
+import { usePuterStore } from "~/lib/puter";
 
 const ResumeCard = ({
     resume: { id, companyName, jobTitle, imagePath, feedback },
+    isPuter,
 }: {
     resume: Resume;
+    isPuter: boolean;
 }) => {
-    return (
-        <Link
-            to={`/resume/${id}`}
-            className="resume-card animate-in fade-in duration-1000"
-        >
-            <div className="resume-card-header">
-                <div className="flex flex-col gap-2">
-                    <h2 className="!text-black font-bold break-words">
-                        {companyName}
-                    </h2>
-                    <h3 className="text-lg break-words text-gray-500">
-                        {jobTitle}
-                    </h3>
-                </div>
-                <div className="flex-shrink-0">
-                    <ScoreCircle score={feedback.overallScore} />
-                </div>
-            </div>
+    const { fs, kv } = usePuterStore();
+    const [imgUrl, setImgUrl] = useState("");
+    const previousBlobUrlRef = useRef<string | null>(null);
 
-            <div className="gradient-border animate-in fade-in duration-1000 ">
-                <div className="w-full h-full">
-                    <img
-                        src={imagePath}
-                        alt="resume"
-                        className="w-full h-[350px] max-sm:h-[200px] object-cover object-top"
+    useEffect(() => {
+        const loadResume = async () => {
+            const resume = await kv.get(`resume: ${id}`);
+            if (!resume) return;
+
+            const data = JSON.parse(resume);
+            const imageBlob = await fs.read(data.imagePath);
+            if (!imageBlob) return;
+
+            const url = URL.createObjectURL(imageBlob);
+
+            // Clean up the old blob URL
+            if (previousBlobUrlRef.current) {
+                URL.revokeObjectURL(previousBlobUrlRef.current);
+            }
+
+            previousBlobUrlRef.current = url;
+            setImgUrl(url);
+        };
+
+        loadResume();
+
+        return () => {
+            if (previousBlobUrlRef.current) {
+                URL.revokeObjectURL(previousBlobUrlRef.current);
+                previousBlobUrlRef.current = null;
+            }
+        };
+    }, [id, fs, kv]);
+
+    return (
+        <>
+            {isPuter ? (
+                <Link to={`/resume/${id}`}>
+                    <ResumeCardHelper
+                        companyName={companyName}
+                        jobTitle={jobTitle}
+                        imagePath={imgUrl}
+                        feedback={feedback}
+                    />
+                </Link>
+            ) : (
+                <div className="resume-card animate-in fade-in duration-1000">
+                    <ResumeCardHelper
+                        companyName={companyName}
+                        jobTitle={jobTitle}
+                        imagePath={imagePath}
+                        feedback={feedback}
                     />
                 </div>
-            </div>
-        </Link>
+            )}
+        </>
     );
 };
 

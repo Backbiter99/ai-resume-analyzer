@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import ATS from "~/components/ATS";
 import Details from "~/components/Details";
@@ -21,6 +21,9 @@ const Resume = () => {
     const [resumeUrl, setResumeUrl] = useState("");
     const [feedback, setFeedback] = useState<Feedback | null>(null);
 
+    const resumeBlobUrlRef = useRef<string | null>(null);
+    const imgBlobUrlRef = useRef<string | null>(null);
+
     useEffect(() => {
         if (!isLoading && !auth.isAuthenticated) {
             navigate(`/auth?next=/resume/${id}`);
@@ -30,30 +33,52 @@ const Resume = () => {
     useEffect(() => {
         const loadResume = async () => {
             const resume = await kv.get(`resume: ${id}`);
-            if (!resume) {
-                return;
-            }
+            if (!resume) return;
 
             const data = JSON.parse(resume);
 
             const resumeBlob = await fs.read(data.resumePath);
-            if (!resumeBlob) {
-                return;
-            }
+            if (resumeBlob) {
+                const pdfBlob = new Blob([resumeBlob], {
+                    type: "application/pdf",
+                });
 
-            const pdfBlob = new Blob([resumeBlob], { type: "application/pdf" });
-            setResumeUrl(URL.createObjectURL(pdfBlob));
+                // Clean up previous
+                if (resumeBlobUrlRef.current) {
+                    URL.revokeObjectURL(resumeBlobUrlRef.current);
+                }
+
+                const resumeUrl = URL.createObjectURL(pdfBlob);
+                resumeBlobUrlRef.current = resumeUrl;
+                setResumeUrl(resumeUrl);
+            }
 
             const imageBlob = await fs.read(data.imagePath);
-            if (!imageBlob) {
-                return;
+            if (imageBlob) {
+                if (imgBlobUrlRef.current) {
+                    URL.revokeObjectURL(imgBlobUrlRef.current);
+                }
+
+                const imgUrl = URL.createObjectURL(imageBlob);
+                imgBlobUrlRef.current = imgUrl;
+                setImgUrl(imgUrl);
             }
-            setImgUrl(URL.createObjectURL(imageBlob));
 
             setFeedback(data.feedback);
         };
 
         loadResume();
+
+        return () => {
+            if (resumeBlobUrlRef.current) {
+                URL.revokeObjectURL(resumeBlobUrlRef.current);
+                resumeBlobUrlRef.current = null;
+            }
+            if (imgBlobUrlRef.current) {
+                URL.revokeObjectURL(imgBlobUrlRef.current);
+                imgBlobUrlRef.current = null;
+            }
+        };
     }, [id, fs, kv]);
 
     return (

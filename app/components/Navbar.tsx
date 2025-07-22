@@ -6,9 +6,14 @@ const Navbar = () => {
             <Link to={"/"}>
                 <p className="text-2xl font-bold text-gradient">ResumeReject</p>
             </Link>
-            <Link to={"/upload"} className="primary-button w-fit">
-                Upload Resume
-            </Link>
+            <div className="flex-row-center gap-4">
+                <Link to="/upload" className="primary-button w-fit">
+                    Upload Resume
+                </Link>
+                <Link to="/logout" className="primary-button w-fit">
+                    Logout
+                </Link>
+            </div>
         </nav>
     );
 };
