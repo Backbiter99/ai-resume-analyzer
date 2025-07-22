@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import ResumeCard from "~/components/ResumeCard";
 import { useEffect, useState } from "react";
 import { usePuterStore } from "~/lib/puter";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { resumes } from "constants/index";
 
 export function meta(_: Route.MetaArgs) {
@@ -133,6 +133,14 @@ export default function Home() {
                     </section>
                 )}
             </section>
+            <div className="mx-auto w-[90%] mb-6 mt-3">
+                <Link
+                    to="/logout"
+                    className="secondary-gradient text-white rounded-full p-2 md:px-4 md:py-2 cursor-pointer w-full text-center sm:hidden inline-block"
+                >
+                    Logout
+                </Link>
+            </div>
         </main>
     );
 }

@@ -1,6 +1,6 @@
 import { prepareInstructions } from "constants/index";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
 import { convertPdfToImage } from "~/lib/pdf2img";
@@ -181,6 +181,14 @@ const Upload = () => {
                     )}
                 </div>
             </section>
+            <div className="sm:hidden mb-8">
+                <Link
+                    to="/logout"
+                    className="secondary-gradient text-white rounded-full py-2 px-4 cursor-pointer w-[95%] mx-auto text-center block"
+                >
+                    Logout
+                </Link>
+            </div>
         </main>
     );
 };
